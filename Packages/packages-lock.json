@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.kameffee.unity-package-test": {
-      "version": "file:TestPackage",
+      "version": "file:UnityPackageTest",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
