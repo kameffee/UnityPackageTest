@@ -21,7 +21,6 @@ jobs:
         git checkout upm
         git checkout master README.md || echo README.md not found
         mkdir Documentation~
-        git mv README.md Documentation~/README.md
         git checkout master README.md || echo README.md not found
         git checkout master CHANGELOG.md || echo CHANGELOG.md not found
         git checkout master LICENSE || echo LICENSE not found
