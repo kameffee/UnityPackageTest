@@ -45,7 +45,7 @@ jobs:
         git tag -f ${{ env.TAG }}
         git push -f origin ${{ env.TAG }}
       env:
-        TAG: v ${{ fromJson(steps.package.outputs.data).version }}
+        TAG: "v{{ fromJson(steps.package.outputs.data).version }}"
         
     - name: Create Release
       uses: actions/create-release@v1
