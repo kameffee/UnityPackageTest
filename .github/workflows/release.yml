@@ -52,8 +52,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: release-${{ fromJson(steps.package.outputs.data).version }}
-        release_name: v${{ fromJson(steps.package.outputs.data).version }}
+        tag_name: "v${{ fromJson(steps.package.outputs.data).version }}"
+        release_name: "v${{ fromJson(steps.package.outputs.data).version }}"
         body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
-        draft: true
+        draft: false
         prerelease: false
