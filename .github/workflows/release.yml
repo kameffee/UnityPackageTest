@@ -10,7 +10,7 @@ jobs:
     name: release
     runs-on: ubuntu-latest
     env:
-      ROOT: Assets/Packages/UnityPackageTest
+      ROOT: Packages/UnityPackageTest
     steps:
     - uses: actions/checkout@v2
     - name: Get package
@@ -45,7 +45,7 @@ jobs:
         git tag -f ${{ env.TAG }}
         git push -f origin ${{ env.TAG }}
       env:
-        TAG: v${{ fromJson(steps.package.outputs.data).version }}
+        TAG: ${{ fromJson(steps.package.outputs.data).version }}
         
     - name: Create Release
       uses: actions/create-release@v1
