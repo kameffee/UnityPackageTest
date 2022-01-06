@@ -39,3 +39,21 @@ jobs:
         git push -f -u origin upm
       env:
         PKG_ROOT: Packages/UnityPackageTest
+      
+    - name: Add Tag
+      run: |
+        git tag -f ${{ env.TAG }}
+        git push -f origin ${{ env.TAG }}
+      env:
+        TAG: v${{ fromJson(steps.package.outputs.data).version }}
+        
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: release-${{ fromJson(steps.package.outputs.data).version }}
+        release_name: v${{ fromJson(steps.package.outputs.data).version }}
+        body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
+        draft: true
+        prerelease: false
