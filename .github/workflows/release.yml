@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-    - main
+    - feature/unitypackage-upload-test
 
 jobs:
   release:
@@ -55,5 +55,5 @@ jobs:
         tag_name: "v${{ fromJson(steps.package.outputs.data).version }}"
         release_name: "v${{ fromJson(steps.package.outputs.data).version }}"
         body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
-        draft: false
+        draft: true
         prerelease: false
