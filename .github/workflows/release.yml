@@ -4,6 +4,8 @@ on:
   push:
     branches:
     - feature/unitypackage-upload-test
+    
+  workflow_dispatch:
 
 jobs:
   # upmブランチにコミット
@@ -74,13 +76,26 @@ jobs:
           buildMethod: PackageExporter.Export
           versioning: None
 
-  # リリースを切る
+      # アーティファクトに上げる
+      - uses: actions/upload-artifact@v2
+        with:
+          name: UnityPackageTest.unitypackage
+          path: UnityPackageTest.unitypackage
+
+  # リリースを切ってunitypackageを上げる
   create-release:
     needs: [upm-release, create-package]
     runs-on: ubuntu-latest
-    steps:
-      - name: Create Release
+    strategy:
+      matrix:
+        unity: ["2020.1.0f1"]
+        include:
+          - unity: 2020.1.0f1
+            license: UNITY_LICENSE_2020
 
+    steps:
+      # Releaseを切る
+      - name: Create Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,3 +105,20 @@ jobs:
           body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
           draft: true
           prerelease: false
+
+      # アーティファクトから落としてくる
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: UnityPackageTest.unitypackage
+      
+      # アップロード
+      - name: Upload UnityPackage
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: UnityPackageTest.unitypackage
+          asset_name: UnityPackageTest.unitypackage
+          asset_content_type: application/octet-stream
