@@ -2,7 +2,7 @@
   "name": "com.kameffee.unity-package-test",
   "displayName": "UnityPackageTest",
   "description": "\u30c6\u30b9\u30c8\u30d1\u30c3\u30b1\u30fc\u30b8\u306e\u8aac\u660e",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Kameffee",
   "unity": "2020.1",
   "keywords": [
