@@ -6,7 +6,8 @@ on:
     - feature/unitypackage-upload-test
 
 jobs:
-  release:
+  # upmブランチにコミット
+  upm-release:
     name: release
     runs-on: ubuntu-latest
     env:
@@ -17,7 +18,7 @@ jobs:
       id: package
       run: |
         echo "::set-output name=data::$(cat ${{ env.ROOT }}/package.json | tr -d '\n')"
-        
+
     - name: Prepare
       run: |
         git subtree split -P "${{ env.ROOT }}" -b "${{ env.BRANCH }}"
@@ -46,14 +47,46 @@ jobs:
         git push -f origin ${{ env.TAG }}
       env:
         TAG: "v${{ fromJson(steps.package.outputs.data).version }}"
-        
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: "v${{ fromJson(steps.package.outputs.data).version }}"
-        release_name: "v${{ fromJson(steps.package.outputs.data).version }}"
-        body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
-        draft: true
-        prerelease: false
+
+  # パッケージ出力
+  create-package:
+    needs: [upm-release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        unity: ["2020.1.0f1"]
+        include:
+          - unity: 2020.1.0f1
+            license: UNITY_LICENSE_2020
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # 関数を叩いてUnityPackage作成
+      - name: Export unitypackage
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets[matrix.license] }}
+        with:
+          projectPath: .
+          unityVersion: ${{ matrix.unity }}
+          targetPlatform: StandaloneLinux64
+          buildMethod: PackageExporter.Export
+          versioning: None
+
+  # リリースを切る
+  create-release:
+    needs: [upm-release, create-package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ fromJson(steps.package.outputs.data).version }}"
+          release_name: "v${{ fromJson(steps.package.outputs.data).version }}"
+          body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
+          draft: true
+          prerelease: false
