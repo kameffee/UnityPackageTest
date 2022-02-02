@@ -80,7 +80,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: UnityPackageTest.unitypackage
-          path: UnityPackageTest.unitypackage
 
   # リリースを切ってunitypackageを上げる
   create-release:
