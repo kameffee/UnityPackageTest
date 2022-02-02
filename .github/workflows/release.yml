@@ -57,6 +57,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+    
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-UnityPackageTest
 
       # 関数を叩いてUnityPackage作成
       - name: Export unitypackage
