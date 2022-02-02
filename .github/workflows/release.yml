@@ -54,12 +54,6 @@ jobs:
   create-package:
     needs: [upm-release]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        unity: ["2020.1.0f1"]
-        include:
-          - unity: 2020.1.0f1
-            license: UNITY_LICENSE_2020
 
     steps:
       - uses: actions/checkout@v2
@@ -68,9 +62,10 @@ jobs:
       - name: Export unitypackage
         uses: game-ci/unity-builder@v2
         env:
-          UNITY_LICENSE: ${{ secrets[matrix.license] }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_2020 }}
         with:
           projectPath: .
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           unityVersion: ${{ matrix.unity }}
           targetPlatform: StandaloneLinux64
           buildMethod: PackageExporter.Export
