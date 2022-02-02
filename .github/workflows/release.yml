@@ -54,9 +54,9 @@ jobs:
   create-package:
     needs: [upm-release]
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       # 関数を叩いてUnityPackage作成
       - name: Export unitypackage
