@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERSION_NAME: "v0.0.4"
-      FILE_NAME: "UnityPackageTest_${{ env.VERSION_NAME }}.unitypackage"
+      FILE_NAME: "UnityPackageTest_${{ v0.0.4 }}.unitypackage"
     steps:
       # Releaseを切る
       - name: Create Release
