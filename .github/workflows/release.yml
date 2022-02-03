@@ -116,6 +116,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: UnityPackageTest.unitypackage
+          path: .
+      
+      - name: Debug
+        run: ls
       
       # アップロード
       - name: Upload UnityPackage
