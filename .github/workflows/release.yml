@@ -60,18 +60,21 @@ jobs:
     
       - uses: actions/cache@v2
         with:
-          path: Library
-          key: Library-UnityPackageTest
+          path: path/to/your/project/Library
+          key: Library-UnityPackageTest-StandaloneLinux64
+          restore-keys: |
+            Library-UnityPackageTest-
+            Library-
 
       # 関数を叩いてUnityPackage作成
       - name: Export unitypackage
         uses: game-ci/unity-builder@v2
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_2020 }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          unityVersion: 2020.1.1f1
+          unityVersion: 2020.1.0f1
           targetPlatform: StandaloneLinux64
           buildMethod: PackageExporter.Export
 
