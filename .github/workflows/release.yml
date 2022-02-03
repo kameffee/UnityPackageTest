@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERSION_NAME: "v0.0.4"
-      FILE_NAME: "UnityPackageTest_${{ v0.0.4 }}.unitypackage"
+      FILE_NAME: "UnityPackageTest_v0.0.4.unitypackage"
     steps:
       # Releaseを切る
       - name: Create Release
@@ -101,7 +101,6 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION_NAME: "v0.0.4"
         with:
           tag_name: "${{ env.VERSION_NAME }}"
           release_name: "${{ env.VERSION_NAME }}"
