@@ -105,9 +105,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION_NAME: 0.0.4
         with:
-          tag_name: "v${{ VERSION }}"
-          release_name: "v${{ VERSION }}"
-          body: https://github.com/kameffee/UnityPackageTest.git#v${{ VERSION }}
+          tag_name: "v${{ VERSION_NAME }}"
+          release_name: "v${{ VERSION_NAME }}"
+          body: https://github.com/kameffee/UnityPackageTest.git#v${{ VERSION_NAME }}
           draft: true
           prerelease: false
 
