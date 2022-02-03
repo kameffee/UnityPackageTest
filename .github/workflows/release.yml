@@ -71,10 +71,9 @@ jobs:
         with:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          unityVersion: 2020.1.0f1
+          unityVersion: 2020.1.1f1
           targetPlatform: StandaloneLinux64
           buildMethod: PackageExporter.Export
-          versioning: None
 
       # アーティファクトに上げる
       - uses: actions/upload-artifact@v2
