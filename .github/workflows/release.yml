@@ -57,10 +57,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Debug
+        run: |
+          ls
     
       - uses: actions/cache@v2
         with:
-          path: path/to/your/project/Library
+          path: Library
           key: Library-UnityPackageTest-StandaloneLinux64
           restore-keys: |
             Library-UnityPackageTest-
@@ -68,7 +72,7 @@ jobs:
 
       # 関数を叩いてUnityPackage作成
       - name: Export unitypackage
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@v2.0-alpha-6
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
