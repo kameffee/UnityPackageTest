@@ -103,10 +103,11 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: 0.0.4
         with:
-          tag_name: "v${{ fromJson(steps.package.outputs.data).version }}"
-          release_name: "v${{ fromJson(steps.package.outputs.data).version }}"
-          body: https://github.com/kameffee/UnityPackageTest.git#v${{ fromJson(steps.package.outputs.data).version }}
+          tag_name: "v${{ VERSION }}"
+          release_name: "v${{ VERSION }}"
+          body: https://github.com/kameffee/UnityPackageTest.git#v${{ VERSION }}
           draft: true
           prerelease: false
 
