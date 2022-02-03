@@ -21,14 +21,14 @@ jobs:
       run: |
         echo "::set-output name=data::$(cat ${{ env.ROOT }}/package.json | tr -d '\n')"
 
-#     - name: Prepare
-#       run: |
-#         git subtree split -P "${{ env.ROOT }}" -b "${{ env.BRANCH }}"
-#         git checkout "${{ env.BRANCH }}"
-#         git mv Samples Samples~
-#         rm -f Samples.meta
-#       env:
-#         BRANCH: release-tmp
+    - name: Prepare
+      run: |
+        git subtree split -P "${{ env.ROOT }}" -b "${{ env.BRANCH }}"
+        git checkout "${{ env.BRANCH }}"
+        git mv Samples Samples~
+        rm -f Samples.meta
+      env:
+        BRANCH: release-tmp
 
 #     - name: Push upm branch
 #       run: |
@@ -54,14 +54,13 @@ jobs:
   create-package:
     needs: [upm-release]
     runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: "v0.0.4"
+      FILE_NAME: "UnityPackageTest_${{ env.VERSION_NAME }}.unitypackage"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Debug
-        run: |
-          ls
-    
       - uses: actions/cache@v2
         with:
           path: Library
@@ -82,21 +81,19 @@ jobs:
           targetPlatform: StandaloneLinux64
           buildMethod: PackageExporter.Export
       
-      - name: Debug
-        run: |
-          ls
-      
       # アーティファクトに上げる
       - uses: actions/upload-artifact@v2
         with:
-          name: UnityPackageTest.unitypackage
-          path: UnityPackageTest.unitypackage
+          name: "${{ env.FILE_NAME }}"
+          path: "${{ env.FILE_NAME }}"
 
   # リリースを切ってunitypackageを上げる
   create-release:
     needs: [upm-release, create-package]
     runs-on: ubuntu-latest
-
+    env:
+      VERSION_NAME: "v0.0.4"
+      FILE_NAME: "UnityPackageTest_${{ env.VERSION_NAME }}.unitypackage"
     steps:
       # Releaseを切る
       - name: Create Release
@@ -104,11 +101,11 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION_NAME: "0.0.4"
+          VERSION_NAME: "v0.0.4"
         with:
-          tag_name: "v${{ env.VERSION_NAME }}"
-          release_name: "v${{ env.VERSION_NAME }}"
-          body: "https://github.com/kameffee/UnityPackageTest.git#v${{ env.VERSION_NAME }}"
+          tag_name: "${{ env.VERSION_NAME }}"
+          release_name: "${{ env.VERSION_NAME }}"
+          body: "https://github.com/kameffee/UnityPackageTest.git#${{ env.VERSION_NAME }}"
           draft: true
           prerelease: false
 
@@ -116,12 +113,9 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
-          name: UnityPackageTest.unitypackage
+          name: ${{ env.FILE_NAME }}
           path: .
-      
-      - name: Debug
-        run: ls
-      
+
       # アップロード
       - name: Upload UnityPackage
         uses: actions/upload-release-asset@v1
@@ -129,6 +123,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./UnityPackageTest.unitypackage
-          asset_name: UnityPackageTest.unitypackage
+          asset_path: "./${{ env.FILE_NAME }}}"
+          asset_name: "${{ env.FILE_NAME }}"
           asset_content_type: application/octet-stream
