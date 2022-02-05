@@ -52,8 +52,6 @@ jobs:
   create-release:
     needs: [create-package]
     runs-on: ubuntu-latest
-    env:
-      VERSION_NAME: ${{ env.GIT_TAG }}
     steps:
       # Releaseを切る
       - name: Create Release
