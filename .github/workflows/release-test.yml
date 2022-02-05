@@ -48,7 +48,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: "${{ env.FILE_NAME }}"
-          path: "${{ env.EXPORT_PATH }}"
+          path: "./${{ env.EXPORT_PATH }}"
 
   # リリースを切ってunitypackageを上げる
   create-release:
