@@ -68,13 +68,11 @@ jobs:
 
       # アーティファクトから落としてくる
       - name: Download Artifact
+        id: download
         uses: actions/download-artifact@v2
         with:
           name: ${{ env.FILE_NAME }}
           path: .
-          
-      - name: Debug
-        run: ls
 
       # アップロード
       - name: Upload UnityPackage
@@ -83,6 +81,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./${{ env.FILE_NAME }}"
+          asset_path: ${{ steps.download.outputs.download-path }}
           asset_name: "${{ env.FILE_NAME }}"
           asset_content_type: application/octet-stream
