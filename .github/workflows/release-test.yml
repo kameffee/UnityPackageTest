@@ -1,0 +1,87 @@
+name: Release
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "eg. v1.0.2"
+        required: true
+
+env:
+  GIT_TAG: ${{ github.event.inputs.version }}
+  FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
+jobs:
+
+  # パッケージ出力
+  create-package:
+    runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: ${{ env.GIT_TAG }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # キャッシュ設定
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-UnityPackageTest-StandaloneLinux64
+          restore-keys: |
+            Library-UnityPackageTest-
+            Library-
+            
+      # 関数を叩いてUnityPackage作成
+      - name: Export unitypackage
+        uses: game-ci/unity-builder@v2.0-alpha-6
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: .
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          unityVersion: 2020.1.0f1
+          targetPlatform: StandaloneLinux64
+          buildMethod: PackageExporter.Export
+      
+      # アーティファクトに上げる
+      - uses: actions/upload-artifact@v2
+        with:
+          name: "${{ env.FILE_NAME }}"
+          path: "./UnityPackageTest.unitypackage"
+
+  # リリースを切ってunitypackageを上げる
+  create-release:
+    needs: [create-package]
+    runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: ${{ env.GIT_TAG }}
+    steps:
+      # Releaseを切る
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ env.VERSION_NAME }}"
+          release_name: "${{ env.VERSION_NAME }}"
+          body: "https://github.com/kameffee/UnityPackageTest.git#${{ env.VERSION_NAME }}"
+          draft: true
+          prerelease: false
+
+      # アーティファクトから落としてくる
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.FILE_NAME }}
+          path: .
+
+      # アップロード
+      - name: Upload UnityPackage
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./${{ env.FILE_NAME }}"
+          asset_name: "${{ env.FILE_NAME }}"
+          asset_content_type: application/octet-stream
