@@ -74,12 +74,6 @@ jobs:
         with:
           name: ${{ env.FILE_NAME }}
           path: .
-          
-      - name: Debug
-        run: |
-          ls
-          echo "download_path: ${{ steps.download.outputs.download-path }}"
-          echo "FILE_NAME: ${{env.FILE_NAME}}"
 
       # アップロード
       - name: Upload UnityPackage
