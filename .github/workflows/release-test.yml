@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "eg. v1.0.2"
+        description: "Version: eg. v1.0.2"
         required: true
 
 env:
   GIT_TAG: ${{ github.event.inputs.version }}
   FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
+
 jobs:
 
   # パッケージ出力
