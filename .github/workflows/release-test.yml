@@ -72,6 +72,9 @@ jobs:
         with:
           name: ${{ env.FILE_NAME }}
           path: .
+          
+      - name: Debug
+        run: ls
 
       # アップロード
       - name: Upload UnityPackage
