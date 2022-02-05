@@ -8,7 +8,6 @@ on:
         required: true
 
 env:
-  GIT_TAG: ${{ github.event.inputs.version }}
   FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
   VERSION_NAME: ${{ github.event.inputs.version }}
   # Expoter出力されるファイルパス
