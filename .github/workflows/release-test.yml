@@ -11,6 +11,8 @@ env:
   GIT_TAG: ${{ github.event.inputs.version }}
   FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
   VERSION_NAME: ${{ github.event.inputs.version }}
+  # Expoter出力されるファイルパス
+  EXPORT_FILE: "UnityPackageTest.unitypackage"
 
 jobs:
 
@@ -46,7 +48,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: "${{ env.FILE_NAME }}"
-          path: "./UnityPackageTest.unitypackage"
+          path: "${{ env.EXPORT_PATH }}"
 
   # リリースを切ってunitypackageを上げる
   create-release:
@@ -87,6 +89,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./UnityPackageTest.unitypackage"
+          asset_path: "./${{ env.EXPORT_FILE }}"
           asset_name: "${{ env.FILE_NAME }}"
           asset_content_type: application/octet-stream
