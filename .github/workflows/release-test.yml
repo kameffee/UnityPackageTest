@@ -10,14 +10,13 @@ on:
 env:
   GIT_TAG: ${{ github.event.inputs.version }}
   FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
+  VERSION_NAME: ${{ github.event.inputs.version }}
 
 jobs:
 
   # パッケージ出力
   create-package:
     runs-on: ubuntu-latest
-    env:
-      VERSION_NAME: ${{ env.GIT_TAG }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
