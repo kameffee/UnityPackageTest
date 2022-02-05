@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public static class PackageExporter
+public class PackageExporter
 {
     // Packages以下を指定する場合フォルダパスではなく Packages/{パッケージ名} なので注意
     private static readonly string PackagePath = "Packages/com.kameffee.unity-package-test";
 
-    [MenuItem("Edit/Export")]
+    [MenuItem("Tools/ExportPackage")]
     private static void Export()
     {
         // 出力ファイル名
-        var fileName = "UnityPackageTest.unitypackage";
+        var exportPath = "./UnityPackageTest.unitypackage";
 
         var exportedPackageAssetList = new List<string>();
         foreach (var guid in AssetDatabase.FindAssets("", new[] { PackagePath }))
@@ -24,7 +24,7 @@ public static class PackageExporter
         }
 
         AssetDatabase.ExportPackage(exportedPackageAssetList.ToArray(),
-            fileName,
+            exportPath,
             ExportPackageOptions.Recurse);
     }
 }
