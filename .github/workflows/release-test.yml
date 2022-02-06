@@ -10,8 +10,8 @@ on:
 env:
   FILE_NAME: "UnityPackageTest_${{ github.event.inputs.version }}.unitypackage"
   VERSION_NAME: ${{ github.event.inputs.version }}
-  # Expoter出力されるファイルパス
-  EXPORT_FILE: "UnityPackageTest.unitypackage"
+  # Expoterから出力されるファイルパス
+  EXPORT_FILE: "./UnityPackageTest.unitypackage"
 
 jobs:
 
@@ -42,18 +42,7 @@ jobs:
           unityVersion: 2020.1.0f1
           targetPlatform: StandaloneLinux64
           buildMethod: PackageExporter.Export
-      
-      # アーティファクトに上げる
-      - uses: actions/upload-artifact@v2
-        with:
-          name: "${{ env.FILE_NAME }}"
-          path: "./${{ env.EXPORT_PATH }}"
 
-  # リリースを切ってunitypackageを上げる
-  create-release:
-    needs: [create-package]
-    runs-on: ubuntu-latest
-    steps:
       # Releaseを切る
       - name: Create Release
         id: create_release
@@ -67,14 +56,6 @@ jobs:
           draft: true
           prerelease: false
 
-      # アーティファクトから落としてくる
-      - name: Download Artifact
-        id: download
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.FILE_NAME }}
-          path: .
-
       # アップロード
       - name: Upload UnityPackage
         uses: actions/upload-release-asset@v1
@@ -82,6 +63,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./${{ env.EXPORT_FILE }}"
+          asset_path: "${{ env.EXPORT_FILE }}"
           asset_name: "${{ env.FILE_NAME }}"
           asset_content_type: application/octet-stream
